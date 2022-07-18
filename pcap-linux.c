@@ -142,11 +142,20 @@ static const char rcsid[] _U_ =
 #include <net/if_arp.h>
 #include <poll.h>
 #include <dirent.h>
-
+#define LOG_TAG "libpcap"
+#include <cutils/log.h>
 #include "pcap-int.h"
 #include "pcap/sll.h"
 #include "pcap/vlan.h"
-
+#ifndef LOGD
+#define LOGD ALOGD
+#endif
+#ifndef LOGI
+#define LOGI ALOGI
+#endif
+#ifndef LOGE
+#define LOGE ALOGE
+#endif
 /*
  * If PF_PACKET is defined, we can use {SOCK_RAW,SOCK_DGRAM}/PF_PACKET
  * sockets rather than SOCK_PACKET sockets.
@@ -3373,6 +3382,7 @@ activate_mmap(pcap_t *handle, int *status)
 		/* by default request 2M for the ring buffer */
 		handle->opt.buffer_size = 2*1024*1024;
 	}
+        fprintf(stderr,"activate_mmap...");
 	ret = prepare_tpacket_socket(handle);
 	if (ret == -1) {
 		free(handlep->oneshot_buffer);
@@ -3385,6 +3395,7 @@ activate_mmap(pcap_t *handle, int *status)
 		 * We don't support memory-mapped capture; our caller
 		 * will fall back on reading from the socket.
 		 */
+                LOGD("activate_mmap:we don't support memory-mapped capture");
 		free(handlep->oneshot_buffer);
 		return 0;
 	}
@@ -3393,6 +3404,7 @@ activate_mmap(pcap_t *handle, int *status)
 		 * Error attempting to enable memory-mapped capture;
 		 * fail.  create_ring() has set *status.
 		 */
+                LOGD("activate_mmap:error to enable memory-mapped capture");
 		free(handlep->oneshot_buffer);
 		return -1;
 	}

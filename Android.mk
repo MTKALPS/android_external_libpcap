@@ -15,7 +15,7 @@ LOCAL_SRC_FILES:=\
 	$(libpcap_SRC)
 
 LOCAL_CFLAGS:=-O2 -g
-LOCAL_CFLAGS+=-DHAVE_CONFIG_H -D_U_="__attribute__((unused))" -Dlinux -D__GLIBC__ -D_GNU_SOURCE
+LOCAL_CFLAGS+=-DHAVE_CONFIG_H -DHAVE_PACKET_RING -D_U_="__attribute__((unused))" -Dlinux -D__GLIBC__ -D_GNU_SOURCE
 
 LOCAL_MODULE:= libpcap
 
